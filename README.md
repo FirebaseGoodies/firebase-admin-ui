@@ -63,3 +63,35 @@ yarn install
 # serve with hot reload at localhost:8090
 yarn run dev
 ```
+
+## Deploy
+
+This project comes with a set of [default configuration](https://github.com/J1wu/firebase-admin-ui/tree/master/firebase.json) for deploying to firebase hosting.
+
+```sh
+# install the firebase cli
+npm install -g firebase-tools
+
+# log into to your firebase account
+firebase login
+
+# init firebase hosting, the .firebaserc file will be generated
+firebase init
+
+# production build
+yarn build
+
+# deploy
+firebae deploy
+```
+
+### Security
+
+Considering the nature of this web app, the [default firebase database rule configuration](https://github.com/J1wu/firebase-admin-ui/tree/master/database.rules.json) was set to allow only specified user to read and write your data.
+
+Please follow these steps to grant user the access.
+
+1. User sign in with available sign-in provider (user will not be able to load any data at this point)
+1. Go to firebase authentication console page, copy user uid.
+1. Go to firebase database console page, create a new root property called `admin`, then add a new record to it, with user uid as the key, `true` as its value.
+1. That's it, happy coding and building.
