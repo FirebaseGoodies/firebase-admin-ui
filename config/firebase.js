@@ -1,6 +1,10 @@
 'use strict'
 
 module.exports = {
+  // NOTE: default properties that uses unix timestamp as its value, which will be parsed into Datetime string on the page
+  timestampProps: [
+    'createdAt', 'updatedAt', 'created_at', 'updated_at'
+  ],
   DBRoots: [
     {
       // NOTE: root property name, example:

@@ -21,10 +21,14 @@ export default {
 function getDataByRef (ref) {
   return new Promise((resolve, reject) => {
     firebaseApp.database().ref(ref)
-      .on('value', snapshot => {
+      .once('value', snapshot => {
         const data = snapshot.val()
         resolve(Object.keys(data).map(key => {
-          return Object.assign({ '.key': key }, data[key])
+          const dataType = typeof data[key]
+          if (dataType === 'object' && !Array.isArray(data[key])) {
+            return Object.assign({ '.key': key }, data[key])
+          }
+          return { '.key': key, value: data[key] }
         }))
       }, error => {
         reject(error)

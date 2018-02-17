@@ -21,6 +21,7 @@
 
 <script>
 import firebaseClient from '@/clients/firebaseClient'
+import { timestampProps } from '@/../config/firebase'
 
 export default {
   name: 'SimpleTableCell',
@@ -38,9 +39,7 @@ export default {
     },
     maxLength: {
       type: Number,
-      default () {
-        return 30
-      }
+      default: () => 30
     },
     fbRef: {
       type: String,
@@ -62,7 +61,7 @@ export default {
       if (!this.data) {
         output.formatted = '-'
       }
-      if (isValidDate(this.data)) {
+      if (isValidDate(this.name, this.data)) {
         output.formatted = new Date(this.data).toString()
       }
       if (isExceedingMaxLength(this.data, this.maxLength)) {
@@ -85,6 +84,15 @@ export default {
       })
     },
     async save (newVal) {
+      if (this.name === '.key') {
+        this.$toast.open({
+          duration: 3000,
+          message: `Sorry, '.key' property can't be updated.`,
+          position: 'is-top',
+          type: 'is-danger'
+        })
+        return
+      }
       await firebaseClient.database.updateDataByRef(this.fbRef, newVal)
       this.editMode = false
       this.$emit('trigger', 'update')
@@ -98,7 +106,8 @@ export default {
   }
 }
 
-function isValidDate (data) {
+function isValidDate (name, data) {
+  if (!timestampProps.includes(name)) return false
   return Date.parse(new Date(data)) > 0
 }
 

@@ -26,9 +26,13 @@ FIREBASE_CONFIG: {
 }
 ```
 
-Describe your database root properties in the [configuration module](https://github.com/J1wu/firebase-admin-ui/tree/master/config/firebase.js).
+Describe your database in the [configuration module](https://github.com/J1wu/firebase-admin-ui/tree/master/config/firebase.js).
 
 ```js
+// NOTE: default properties that uses unix timestamp as its value, which will be parsed into Datetime string on the page
+timestampProps: [
+  'createdAt', 'updatedAt', 'created_at', 'updated_at'
+],
 DBRoots: [
   {
     // NOTE: root property name, example:
@@ -96,5 +100,5 @@ Please follow these steps to grant user the access.
 
 1. User sign in with available sign-in provider (user will not be able to load any data at this point)
 1. Go to firebase authentication console page, copy user uid.
-1. Go to firebase database console page, create a new root property called `admin`, then add a new record to it, with user uid as the key, `true` as its value.
+1. Go to firebase database console page, create a new root property called `admin`, then add a new record to it, with user uid as the key, user email (or any other non-null value) as its value.
 1. That's it, happy coding and building.
