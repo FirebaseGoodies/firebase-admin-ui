@@ -12,8 +12,8 @@
             <img class="is-circle" :src="user.photoURL">
           </div>
           <div class="navbar-dropdown is-right">
-            <a class="navbar-item">English</a>
-            <hr class="navbar-divider">
+            <!-- <a class="navbar-item">English</a>
+            <hr class="navbar-divider"> -->
             <a class="navbar-item" v-on:click="logout">Logout</a>
           </div>
         </div>

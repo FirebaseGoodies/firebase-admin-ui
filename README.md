@@ -3,6 +3,9 @@
 
 Like firebase database but find its console hard to use? Hope this simple web app could help :)
 
+![screenshot](https://user-images.githubusercontent.com/5327840/36336311-fb6461fe-13c9-11e8-98d3-6e7c943baa32.png)
+
+
 ## Getting Started
 
 ### Prerequisites

@@ -27,4 +27,7 @@ export default {
 .main {
   margin-top: 1.5em;
 }
+.is-circle {
+  border-radius: 50%
+}
 </style>

@@ -20,14 +20,22 @@
         <tr
           v-for="(row, index) in sortedRows"
           v-bind:key="index">
-          <td><a :href="getDataLink(row['.key'])" target="_blank">Link</a></td>
+          <td>
+            <action-menu
+              :context="{row, root}"
+              v-on:trigger="onTrigger">
+            </action-menu>
+          </td>
           <td
             nowrap
             v-for="(col, index) in headers"
             v-bind:key="index">
-            <simple-table-cell :data="row[col]"
+            <simple-table-cell
+              :data="row[col]"
               :name="col"
-              :data-link="getDataLink(row['.key'])">
+              :fb-ref="getFirebaseRef(row['.key'], col)"
+              :data-link="getDataLink(row['.key'])"
+              v-on:trigger="onTrigger">
             </simple-table-cell>
           </td>
         </tr>
@@ -39,6 +47,7 @@
 <script>
 import { DATA_LINK } from '@/clients/firebaseClient'
 import SimpleTableCell from './SimpleTableCell'
+import ActionMenu from './ActionMenu'
 
 export default {
   name: 'SimpleTable',
@@ -57,14 +66,14 @@ export default {
     }
   },
   components: {
-    SimpleTableCell
+    SimpleTableCell,
+    ActionMenu
   },
   data () {
     return {
       sortBy: 'createdAt',
       sortOrder: 'desc',
-      sortKey: 'createdAt',
-      DATA_LINK
+      sortKey: 'createdAt'
     }
   },
   computed: {
@@ -95,7 +104,18 @@ export default {
       }
     },
     getDataLink (key) {
-      return `${this.DATA_LINK}${this.root}/${key}`
+      return `${DATA_LINK}${this.root}/${key}`
+    },
+    getFirebaseRef (key, prop) {
+      return `${this.root}/${key}/${prop}`
+    },
+    onTrigger (action) {
+      switch (action) {
+        case 'delete':
+        case 'update':
+          this.$emit('refresh')
+          break
+      }
     }
   }
 }

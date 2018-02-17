@@ -7,7 +7,9 @@ export const DATA_LINK = `https://console.firebase.google.com/project/${config.p
 
 export default {
   database: {
-    getDataByRef
+    getDataByRef,
+    updateDataByRef,
+    deleteDataByRef
   },
   auth: {
     signIn,
@@ -28,6 +30,14 @@ function getDataByRef (ref) {
         reject(error)
       })
   })
+}
+
+function updateDataByRef (ref, newVal) {
+  return firebaseApp.database().ref(ref).set(newVal)
+}
+
+function deleteDataByRef (ref) {
+  return firebaseApp.database().ref(ref).set(null)
 }
 
 function signIn () {
