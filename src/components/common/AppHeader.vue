@@ -1,7 +1,7 @@
 <template lang="html">
   <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      <router-link :to="{name: 'DbMain'}" class="navbar-item">
+      <router-link :to="{name: 'DbHome'}" class="navbar-item">
         Firebase Admin UI
       </router-link>
     </div>

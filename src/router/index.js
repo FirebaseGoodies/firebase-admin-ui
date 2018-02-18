@@ -2,7 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import App from '@/App'
 import Login from '@/components/auth/Login'
-import DbMain from '@/components/database/DbMain'
+import DbHome from '@/components/database/DbHome'
+import DbDetail from '@/components/database/DbDetail'
 import NotFound from '@/components/common/NotFound'
 import firebaseClient from '@/clients/firebaseClient'
 
@@ -16,8 +17,13 @@ const routes = [
     children: [
       {
         path: 'database',
-        name: 'DbMain',
-        component: DbMain
+        name: 'DbHome',
+        component: DbHome
+      },
+      {
+        path: 'database/:root',
+        name: 'DbDetail',
+        component: DbDetail
       }
     ]
   },
