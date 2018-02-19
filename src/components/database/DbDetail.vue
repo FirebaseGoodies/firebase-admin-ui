@@ -19,11 +19,15 @@
       :headers="headers"
       :root="$route.params.root">
     </simple-table>
+    <div class="has-text-centered is-italic">
+      <a v-on:click="loadData" v-if="hasMore">Load More</a>
+      <p v-else class="has-text-grey-light">No More</p>
+    </div>
   </div>
 </template>
 
 <script>
-import firebaseClient from '@/clients/firebaseClient'
+import firebaseClient, { DEFAULT_QUERY } from '@/clients/firebaseClient'
 import firebaseConfig from '@/../config/firebase'
 
 import StatsPanel from './StatsPanel'
@@ -33,9 +37,10 @@ export default {
   name: 'DbDetail',
   data () {
     return {
-      data: [{}],
+      data: [],
       roots: firebaseConfig.DBRoots,
-      defaultStats: [{ name: 'Total', countBy: '.key' }]
+      defaultStats: [{ name: 'Total', countBy: '.key' }],
+      hasMore: true
     }
   },
   computed: {
@@ -44,7 +49,7 @@ export default {
         .find(root => root.name === this.$route.params.root)
     },
     headers () {
-      return this.targetRoot.props || Object.keys(this.data[0])
+      return this.targetRoot.props || Object.keys((this.data[0] || {}))
     },
     stats () {
       return this.targetRoot.stats || this.defaultStats
@@ -52,6 +57,7 @@ export default {
   },
   watch: {
     '$route.params.root' () {
+      this.data = []
       this.loadData()
     }
   },
@@ -64,14 +70,33 @@ export default {
   },
   methods: {
     async loadData () {
+      const ref = this.$route.params.root
+      const params = deepCopy(this.targetRoot.query || DEFAULT_QUERY)
+      const limit = params.limitToLast || params.limitToFirst
+      // NOTE: fetch one more item, base on result to determine if there's more to fetch,
+      // considering developers might not use firebase generated keys, hence this simple pagination approach was implemented.
+      if (params.limitToLast) params.limitToLast = this.data.length + limit + 1
+      if (params.limitToFirst) params.limitToFirst = this.data.length + limit + 1
+
       const loadingComponent = this.$loading.open()
-      this.data = await firebaseClient.database.getDataByRef(this.$route.params.root)
+      const data = await firebaseClient.database.getDataByRef(ref, params)
+      if (data.length !== 1 && data.length % limit === 1) {
+        this.data = data.slice(0, data.length - 1)
+        this.hasMore = true
+      } else {
+        this.data = data
+        this.hasMore = false
+      }
       loadingComponent.close()
     },
     onRefresh () {
       this.loadData()
     }
   }
+}
+
+function deepCopy (target) {
+  return JSON.parse(JSON.stringify(target))
 }
 </script>
 

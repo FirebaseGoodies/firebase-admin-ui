@@ -71,9 +71,9 @@ export default {
   },
   data () {
     return {
-      sortBy: 'createdAt',
+      sortBy: '',
       sortOrder: 'desc',
-      sortKey: 'createdAt'
+      sortKey: ''
     }
   },
   computed: {
